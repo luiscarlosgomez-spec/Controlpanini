@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#031a0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Panini 2026">
+<title>🎴 Álbum Panini FIFA World Cup 2026™</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   PANINI 2026 — DESIGN SYSTEM
+   Tema: Campo de fútbol de noche / estadio
+   Tipografía: Bebas Neue (display) + Outfit (body)
+══════════════════════════════════════════ */
+:root {
+  /* Paleta estadio nocturno */
+  --pitch:   #031a0e;
+  --pitch2:  #052414;
+  --pitch3:  #073320;
+  --pitch4:  #0a4028;
+  --surface: #0d1f10;
+  --sur2:    #112614;
+  --sur3:    #163020;
+
+  /* Bordes */
+  --bor:  rgba(255,255,255,0.07);
+  --bor2: rgba(255,255,255,0.14);
+  --bor3: rgba(255,255,255,0.25);
+
+  /* Texto */
+  --tx:  #f0ffe8;
+  --tx2: #8ab89a;
+  --tx3: #4a7055;
+
+  /* Accentos */
+  --gold:    #f5c842;
+  --gold2:   #ffd966;
+  --gold-bg: rgba(245,200,66,.12);
+  --lime:    #7fff00;
+  --lime2:   #a8ff3e;
+  --lime-bg: rgba(127,255,0,.10);
+  --red:     #ff4444;
+  --red-bg:  rgba(255,68,68,.10);
+  --white:   #ffffff;
+
+  /* Coca-Cola */
+  --coke:    #e8211a;
+  --coke-bg: rgba(232,33,26,.12);
+
+  /* Dimensiones */
+  --r:   14px;
+  --rs:  9px;
+  --nav: 70px;
+
+  /* Fonts */
+  --ff-display: 'Bebas Neue', 'Impact', sans-serif;
+  --ff-body:    'Outfit', 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--ff-body);
+  background: var(--pitch);
+  color: var(--tx);
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── TEXTURE BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.018) 39px, rgba(255,255,255,0.018) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.018) 39px, rgba(255,255,255,0.018) 40px);
+}
+
+/* ── APP SHELL ── */
+#app {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column;
+  height: 100%; max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ── PAGES ── */
+.page { display: none; flex-direction: column; height: 100%; overflow: hidden; }
+.page.active { display: flex; }
+.scroll {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: 14px 16px calc(var(--nav) + 20px);
+}
+.scroll::-webkit-scrollbar { width: 3px; }
+.scroll::-webkit-scrollbar-thumb { background: var(--pitch4); border-radius: 9px; }
+
+/* ── TOP BAR ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 18px 10px;
+  background: linear-gradient(180deg, var(--pitch) 0%, transparent 100%);
+  position: sticky; top: 0; z-index: 20; flex-shrink: 0;
+}
+.topbar-title {
+  font-family: var(--ff-display);
+  font-size: 26px; letter-spacing: 1.5px;
+  color: var(--tx);
+  text-shadow: 0 0 20px rgba(127,255,0,.3);
+}
+.topbar-title span { color: var(--gold); }
+
+/* ── BADGE ── */
+.badge {
+  background: var(--gold); color: #000;
+  font-size: 11px; font-weight: 800;
+  padding: 4px 11px; border-radius: 99px;
+  letter-spacing: .3px;
+}
+.badge-lime { background: var(--lime); }
+.badge-red { background: var(--red); color: #fff; }
+
+/* ── BOTTOM NAV ── */
+.nav {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 520px;
+  height: var(--nav);
+  background: rgba(3,26,14,.95);
+  border-top: 1px solid var(--bor2);
+  display: flex; align-items: center; justify-content: space-around;
+  padding: 0 6px;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.nb {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  flex: 1; padding: 6px 4px;
+  cursor: pointer; background: none; border: none;
+  color: var(--tx3);
+  font-family: var(--ff-body);
+  font-size: 9px; font-weight: 700;
+  letter-spacing: .5px; text-transform: uppercase;
+  transition: color .2s;
+}
+.nb .ni { font-size: 22px; transition: transform .2s; line-height: 1; }
+.nb.active { color: var(--gold); }
+.nb.active .ni { transform: scale(1.15); }
+.nb.center-btn .ni-wrap {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #c8900a);
+  display: flex; align-items: center; justify-content: center;
+  margin-top: -20px;
+  box-shadow: 0 4px 20px rgba(245,200,66,.5), 0 0 40px rgba(245,200,66,.2);
+  font-size: 24px;
+  transition: transform .2s, box-shadow .2s;
+}
+.nb.center-btn:active .ni-wrap { transform: scale(.94); }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--bor);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 12px;
+  position: relative; overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(127,255,0,.2), transparent);
+}
+.card-sm { border-radius: var(--rs); padding: 12px; }
+
+/* ── HERO PROGRESS ── */
+.hero-card {
+  background: linear-gradient(135deg, var(--pitch3) 0%, var(--pitch2) 100%);
+  border: 1px solid var(--bor2);
+  border-radius: var(--r);
+  padding: 22px 20px;
+  margin-bottom: 14px;
+  position: relative; overflow: hidden;
+}
+.hero-card::after {
+  content: '⚽';
+  position: absolute; right: -10px; bottom: -14px;
+  font-size: 90px; opacity: .04;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+.hero-pct {
+  font-family: var(--ff-display);
+  font-size: 72px; line-height: 1;
+  color: var(--gold);
+  letter-spacing: -1px;
+  text-shadow: 0 0 30px rgba(245,200,66,.4);
+}
+.hero-pct span { font-size: 32px; color: var(--tx2); }
+.hero-sub { font-size: 13px; color: var(--tx2); margin-top: 4px; font-weight: 600; }
+
+/* ── PROGRESS BAR ── */
+.pb-wrap { margin-top: 14px; }
+.pb-track {
+  width: 100%; height: 8px;
+  background: rgba(255,255,255,.07);
+  border-radius: 99px; overflow: hidden;
+}
+.pb-fill {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, #7fff00, #f5c842);
+  transition: width .6s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 0 10px rgba(127,255,0,.4);
+}
+.pb-labels {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--tx3);
+  margin-top: 6px; font-weight: 600;
+}
+
+/* ── STAT GRID ── */
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--bor);
+  border-radius: var(--r);
+  padding: 14px 12px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.stat-card .sv {
+  font-family: var(--ff-display);
+  font-size: 36px; line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-card .sl { font-size: 10px; color: var(--tx3); font-weight: 700; text-transform: uppercase; letter-spacing: .6px; }
+.sv-gold { color: var(--gold); }
+.sv-red  { color: var(--red); }
+.sv-lime { color: var(--lime); }
+.sv-white{ color: var(--white); }
+
+/* ── SECTION TITLE ── */
+.sec-title {
+  font-family: var(--ff-display);
+  font-size: 18px; letter-spacing: 1px;
+  color: var(--tx2);
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sec-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--bor2), transparent);
+}
+
+/* ── TEAM CARD ── */
+.team-card {
+  background: var(--surface);
+  border: 1px solid var(--bor);
+  border-radius: var(--r);
+  padding: 13px 15px;
+  margin-bottom: 9px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  position: relative; overflow: hidden;
+}
+.team-card:hover { background: var(--sur2); border-color: var(--bor2); }
+.team-card:active { opacity: .85; }
+.team-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.team-name { font-size: 14px; font-weight: 700; }
+.team-flag { font-size: 22px; flex-shrink: 0; }
+.team-pct {
+  font-family: var(--ff-display);
+  font-size: 22px; color: var(--gold);
+}
+.team-group {
+  font-size: 9px; font-weight: 800; color: var(--tx3);
+  background: var(--pitch4); border-radius: 5px;
+  padding: 2px 7px; text-transform: uppercase; letter-spacing: .5px;
+}
+
+/* ── CHIPS / FILTERS ── */
+.chips {
+  display: flex; gap: 7px; overflow-x: auto; padding-bottom: 4px;
+  scrollbar-width: none; margin-bottom: 12px; flex-shrink: 0;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  white-space: nowrap; padding: 7px 15px;
+  border-radius: 99px; font-size: 12px; font-weight: 700;
+  cursor: pointer; border: 1px solid var(--bor);
+  background: var(--surface); color: var(--tx2);
+  transition: all .15s; flex-shrink: 0;
+  font-family: var(--ff-body);
+}
+.chip:hover { border-color: var(--bor2); color: var(--tx); }
+.chip.active { background: var(--gold); color: #000; border-color: var(--gold); }
+
+/* ── STICKER GRID ── */
+.stk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  gap: 5px; margin-bottom: 8px;
+}
+.stk {
+  aspect-ratio: 3/4;
+  border-radius: 8px;
+  border: 2px solid var(--bor);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  cursor: pointer; position: relative;
+  background: var(--surface);
+  user-select: none; -webkit-user-select: none;
+  transition: transform .12s, border-color .15s;
+  overflow: hidden;
+}
+.stk:active { transform: scale(.88); }
+.stk:hover { border-color: var(--bor2); }
+/* Estados */
+.stk.got {
+  border-color: var(--lime);
+  background: linear-gradient(135deg, rgba(127,255,0,.1), rgba(127,255,0,.04));
+}
+.stk.dup {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(245,200,66,.1), rgba(245,200,66,.04));
+}
+.stk.mis { opacity: .38; }
+/* FOIL */
+.stk.foil { border-color: rgba(245,200,66,.4); background: linear-gradient(135deg, rgba(245,200,66,.08), rgba(255,255,255,.03)); }
+.stk.foil.got { border-color: var(--gold); background: linear-gradient(135deg, rgba(245,200,66,.18), rgba(245,200,66,.06)); }
+/* Coca-Cola */
+.stk.coke { border-color: rgba(232,33,26,.4); background: rgba(232,33,26,.06); }
+.stk.coke.got { border-color: var(--coke); background: rgba(232,33,26,.12); }
+
+.stk .stk-team { font-size: 8px; font-weight: 800; color: var(--tx3); line-height: 1; }
+.stk .stk-num {
+  font-family: var(--ff-display);
+  font-size: 18px; line-height: 1.1;
+  color: var(--tx);
+}
+.stk.got .stk-num { color: var(--lime); }
+.stk.dup .stk-num { color: var(--gold); }
+.stk.foil .stk-num { color: var(--gold); }
+.stk.coke .stk-num { color: var(--coke); }
+.stk.coke.got .stk-num { color: var(--coke); }
+
+.stk .rep-badge {
+  position: absolute; top: 2px; right: 3px;
+  font-size: 8px; font-weight: 800; color: var(--gold);
+  line-height: 1;
+}
+.stk .foil-dot {
+  position: absolute; top: 2px; left: 3px;
+  font-size: 7px; line-height: 1; opacity: .8;
+}
+/* Foto grupal */
+.stk.photo { border-color: rgba(127,255,0,.3); }
+.stk.photo .stk-num { font-size: 9px; font-weight: 800; color: var(--lime2); text-align: center; line-height: 1.2; }
+
+/* ── SECTION HEADER (album) ── */
+.sec-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px; padding: 0 2px;
+}
+.sec-header-left { display: flex; align-items: center; gap: 8px; }
+.sec-flag { font-size: 20px; line-height: 1; }
+.sec-name { font-size: 14px; font-weight: 700; }
+.sec-progress { font-size: 11px; color: var(--tx3); font-weight: 600; }
+.sec-group {
+  font-size: 9px; font-weight: 800;
+  color: var(--gold); background: rgba(245,200,66,.12);
+  border-radius: 4px; padding: 2px 6px;
+  border: 1px solid rgba(245,200,66,.2);
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 13px 22px; border-radius: var(--rs);
+  border: none; cursor: pointer;
+  font-family: var(--ff-body);
+  font-size: 14px; font-weight: 700;
+  transition: all .15s; letter-spacing: .2px;
+}
+.btn:active { transform: scale(.96); }
+.btn-gold { background: linear-gradient(135deg, var(--gold), #c8900a); color: #000; box-shadow: 0 4px 16px rgba(245,200,66,.35); }
+.btn-ghost { background: var(--sur2); color: var(--tx); border: 1px solid var(--bor2); }
+.btn-lime { background: var(--lime-bg); color: var(--lime); border: 1px solid rgba(127,255,0,.3); }
+.btn-red { background: var(--red-bg); color: var(--red); border: 1px solid rgba(255,68,68,.3); }
+.btn-coke { background: var(--coke-bg); color: var(--coke); border: 1px solid rgba(232,33,26,.3); }
+.full { width: 100%; }
+.btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+
+/* ── SEARCH BAR ── */
+.search-wrap { position: relative; margin-bottom: 12px; flex-shrink: 0; }
+.search-wrap input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--bor);
+  border-radius: 11px;
+  padding: 11px 14px 11px 42px;
+  color: var(--tx);
+  font-size: 14px;
+  font-family: var(--ff-body);
+}
+.search-wrap input:focus { outline: none; border-color: rgba(127,255,0,.4); }
+.search-wrap input::placeholder { color: var(--tx3); }
+.search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; }
+
+/* ── MODAL ── */
+.mo {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.75);
+  z-index: 200; display: none; align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.mo.open { display: flex; }
+.md {
+  background: var(--pitch2);
+  width: 100%; max-width: 520px;
+  border-radius: var(--r) var(--r) 0 0;
+  padding: 22px 18px 44px;
+  max-height: 82vh; overflow-y: auto;
+  border-top: 1px solid var(--bor2);
+  animation: slideUp .28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.md-handle { width: 40px; height: 4px; background: var(--bor3); border-radius: 99px; margin: 0 auto 20px; }
+.md-title { font-family: var(--ff-display); font-size: 22px; letter-spacing: 1px; margin-bottom: 16px; color: var(--gold); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: calc(var(--nav) + 16px); left: 50%; transform: translateX(-50%);
+  background: var(--sur3); color: var(--tx);
+  border: 1px solid var(--bor2);
+  padding: 11px 20px; border-radius: 99px;
+  font-size: 13px; font-weight: 700;
+  z-index: 300; white-space: nowrap;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  display: none;
+  animation: tIn .25s ease, tOut .25s ease 2.2s forwards;
+}
+@keyframes tIn { from { opacity:0; transform:translate(-50%,14px); } to { opacity:1; transform:translate(-50%,0); } }
+@keyframes tOut { to { opacity:0; transform:translate(-50%,14px); } }
+
+/* ── REP LIST ── */
+.rep-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--bor);
+  border-radius: var(--rs);
+  margin-bottom: 7px;
+}
+.rep-code { font-family: var(--ff-display); font-size: 16px; letter-spacing: .5px; }
+.rep-sub { font-size: 11px; color: var(--tx3); margin-top: 2px; }
+.rep-cnt {
+  background: var(--gold-bg); color: var(--gold);
+  border: 1px solid rgba(245,200,66,.3);
+  font-size: 12px; font-weight: 800;
+  padding: 4px 12px; border-radius: 99px;
+}
+
+/* ── EXCHANGE ── */
+.exc-card {
+  background: var(--surface); border: 1px solid var(--bor);
+  border-radius: var(--r); padding: 20px; text-align: center; margin-bottom: 12px;
+}
+.qr-canvas { border-radius: var(--rs); display: block; margin: 0 auto; image-rendering: pixelated; }
+.match-ok {
+  background: var(--lime-bg); border: 1px solid rgba(127,255,0,.3);
+  border-radius: var(--rs); padding: 11px 14px;
+  font-size: 13px; font-weight: 700; color: var(--lime);
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+
+/* ── SCAN ── */
+.scan-zone {
+  border-radius: var(--r); overflow: hidden;
+  background: var(--pitch3); min-height: 240px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px; position: relative;
+  border: 2px dashed var(--pitch4);
+}
+.scan-ph { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px; text-align: center; }
+.scan-ph .big-icon { font-size: 52px; line-height: 1; }
+
+/* ── INPUTS ── */
+input, textarea {
+  background: var(--surface); border: 1px solid var(--bor);
+  border-radius: var(--rs); padding: 11px 14px;
+  color: var(--tx); font-size: 14px;
+  font-family: var(--ff-body);
+  outline: none; transition: border-color .2s;
+}
+input:focus, textarea:focus { border-color: rgba(127,255,0,.4); }
+input::placeholder, textarea::placeholder { color: var(--tx3); }
+
+/* ── DIVIDER ── */
+.divider { border: none; border-top: 1px solid var(--bor); margin: 14px 0; }
+
+/* ── MISC ── */
+.c-gold { color: var(--gold); }
+.c-lime { color: var(--lime); }
+.c-red  { color: var(--red); }
+.c-coke { color: var(--coke); }
+.c-tx2  { color: var(--tx2); }
+.c-tx3  { color: var(--tx3); }
+.fw9    { font-weight: 900; }
+.fs11   { font-size: 11px; }
+.fs12   { font-size: 12px; }
+.fs13   { font-size: 13px; }
+.mt8    { margin-top: 8px; }
+.mb8    { margin-bottom: 8px; }
+.mb12   { margin-bottom: 12px; }
+.mb16   { margin-bottom: 16px; }
+.row    { display: flex; align-items: center; gap: 9px; }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--tx3); }
+.empty-state .ei { font-size: 48px; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+
+/* ── LOADING ── */
+#loading {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--pitch);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px;
+}
+.load-logo {
+  font-family: var(--ff-display);
+  font-size: 52px; letter-spacing: 4px;
+  color: var(--gold);
+  text-shadow: 0 0 40px rgba(245,200,66,.5);
+  text-align: center;
+}
+.load-sub { font-size: 13px; color: var(--tx3); letter-spacing: 2px; text-transform: uppercase; }
+.load-bar-wrap { width: 180px; height: 4px; background: var(--pitch4); border-radius: 99px; overflow: hidden; }
+.load-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--lime), var(--gold)); border-radius: 99px; transition: width .35s; }
+
+/* ── RESPONSIVE PC ── */
+@media (min-width: 520px) {
+  .nav { border-radius: var(--r) var(--r) 0 0; }
+  .stk-grid { grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)); }
+  #app { box-shadow: 0 0 60px rgba(0,0,0,.6); }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="load-logo">⚽ PANINI<br><span style="font-size:28px;color:var(--tx2)">FIFA WORLD CUP 2026™</span></div>
+  <div class="load-sub" id="load-msg">Iniciando...</div>
+  <div class="load-bar-wrap"><div class="load-bar-fill" id="load-bar"></div></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- ═══════════════════ INICIO ═══════════════════ -->
+  <div class="page active" id="page-inicio">
+    <div class="topbar">
+      <div class="topbar-title">PANINI <span>2026</span></div>
+      <button class="btn btn-ghost" style="padding:7px 13px;font-size:12px" onclick="openManual()">+ Agregar</button>
+    </div>
+    <div class="scroll">
+
+      <!-- Hero Progress -->
+      <div class="hero-card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div class="hero-pct" id="h-pct">0<span>%</span></div>
+            <div class="hero-sub" id="h-sub">0 de 980 láminas completadas</div>
+          </div>
+          <div style="text-align:center">
+            <svg width="72" height="72" viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r="30" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="7"/>
+              <circle id="ring" cx="36" cy="36" r="30" fill="none"
+                stroke="url(#rg)" stroke-width="7" stroke-linecap="round"
+                stroke-dasharray="188.5" stroke-dashoffset="188.5"
+                transform="rotate(-90 36 36)" style="transition:stroke-dashoffset .6s cubic-bezier(.34,1.56,.64,1)"/>
+              <defs>
+                <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#7fff00"/>
+                  <stop offset="100%" stop-color="#f5c842"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div style="font-size:10px;color:var(--tx3);margin-top:2px;font-weight:700">del álbum</div>
+          </div>
+        </div>
+        <div class="pb-wrap">
+          <div class="pb-track"><div class="pb-fill" id="h-fill" style="width:0%"></div></div>
+          <div class="pb-labels">
+            <span id="h-got-lbl">0 obtenidas</span>
+            <span id="h-mis-lbl">980 faltantes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="sv sv-lime" id="s-got">0</div>
+          <div class="sl">✅ Obtenidas</div>
+        </div>
+        <div class="stat-card">
+          <div class="sv sv-red" id="s-mis">980</div>
+          <div class="sl">❌ Faltantes</div>
+        </div>
+        <div class="stat-card">
+          <div class="sv sv-gold" id="s-rep">0</div>
+          <div class="sl">🔄 Repetidas</div>
+        </div>
+        <div class="stat-card">
+          <div class="sv sv-white">980</div>
+          <div class="sl">📋 Total álbum</div>
+        </div>
+      </div>
+
+      <!-- Mini secciones -->
+      <div class="sec-title">📑 Secciones del álbum</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px">
+        <div class="card card-sm" style="text-align:center;cursor:pointer" onclick="goAlbumFilter('fwc')">
+          <div style="font-size:24px;margin-bottom:4px">🌍</div>
+          <div style="font-family:var(--ff-display);font-size:18px;color:var(--gold)" id="s-fwc-n">0/20</div>
+          <div class="fs11 c-tx3">FWC — Intro e Historia</div>
+          <div class="pb-track" style="margin-top:6px;height:3px"><div class="pb-fill" id="s-fwc-bar" style="width:0%;background:var(--gold)"></div></div>
+        </div>
+        <div class="card card-sm" style="text-align:center;cursor:pointer" onclick="goAlbumFilter('coke')">
+          <div style="font-size:24px;margin-bottom:4px">🥤</div>
+          <div style="font-family:var(--ff-display);font-size:18px;color:var(--coke)" id="s-cc-n">0/14</div>
+          <div class="fs11 c-tx3">Coca-Cola™</div>
+          <div class="pb-track" style="margin-top:6px;height:3px"><div class="pb-fill" id="s-cc-bar" style="width:0%;background:var(--coke)"></div></div>
+        </div>
+      </div>
+
+      <!-- Top equipos -->
+      <div class="sec-title">🏆 Mis equipos</div>
+      <div id="ini-teams"></div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════ ÁLBUM ═══════════════════ -->
+  <div class="page" id="page-album">
+    <div class="topbar">
+      <div class="topbar-title">ÁLBUM <span id="al-pct-label">0%</span></div>
+    </div>
+    <div style="padding:0 16px;flex-shrink:0">
+      <div class="search-wrap">
+        <span class="search-icon">⚽</span>
+        <input type="text" id="al-search" placeholder="Buscar lámina: COL 5, MEX 13, FWC 9..." oninput="renderAlbum()">
+      </div>
+      <div class="chips" id="al-chips">
+        <button class="chip active" onclick="setFilter('all',this)">Todas</button>
+        <button class="chip" onclick="setFilter('got',this)">✅ Obtenidas</button>
+        <button class="chip" onclick="setFilter('mis',this)">❌ Faltantes</button>
+        <button class="chip" onclick="setFilter('dup',this)">🔄 Repetidas</button>
+        <button class="chip" onclick="setFilter('fwc',this)">🌍 FWC</button>
+        <button class="chip" onclick="setFilter('coke',this)">🥤 Coca-Cola</button>
+      </div>
+    </div>
+    <div class="scroll" style="padding-top:4px">
+      <div id="album-body"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ ESCANEAR ═══════════════════ -->
+  <div class="page" id="page-scan">
+    <div class="topbar"><div class="topbar-title">ESCANEAR</div></div>
+    <div class="scroll">
+
+      <div class="scan-zone" id="scan-zone">
+        <video id="scan-video" autoplay playsinline muted
+          style="width:100%;height:100%;object-fit:cover;display:none;border-radius:var(--r)"></video>
+        <canvas id="scan-canvas" style="display:none"></canvas>
+        <img id="scan-prev" style="width:100%;height:100%;object-fit:contain;display:none;border-radius:var(--r)" alt="">
+        <div class="scan-ph" id="scan-ph">
+          <div class="big-icon">📷</div>
+          <p style="font-weight:700;font-size:15px">Escanear láminas</p>
+          <p class="fs12 c-tx3" style="max-width:260px;line-height:1.6">
+            Coloca hasta 25 láminas boca abajo. La app detecta los códigos del reverso automáticamente.
+          </p>
+        </div>
+      </div>
+
+      <div class="btn-grid mb12">
+        <button class="btn btn-gold full" id="btn-cam" onclick="startCam()">📷 Usar cámara</button>
+        <button class="btn btn-ghost full" onclick="document.getElementById('file-input').click()">🖼 Galería</button>
+      </div>
+      <input type="file" id="file-input" accept="image/*" style="display:none" onchange="onFile(event)">
+
+      <div class="card card-sm mb12" id="scan-tip">
+        <div class="sec-title" style="font-size:14px;margin-bottom:8px">💡 Instrucciones</div>
+        <p class="fs12 c-tx2" style="line-height:1.7">
+          <strong style="color:var(--gold)">1.</strong> Pon las láminas <strong>boca abajo</strong> sobre superficie plana<br>
+          <strong style="color:var(--gold)">2.</strong> Los códigos deben verse nítidos (ej: <span style="color:var(--lime);font-weight:700">COL 5</span>, <span style="color:var(--lime);font-weight:700">MEX 13</span>)<br>
+          <strong style="color:var(--gold)">3.</strong> Toma la foto o sube desde galería<br>
+          <strong style="color:var(--gold)">4.</strong> Revisa la lista y confirma los códigos
+        </p>
+      </div>
+
+      <div id="scan-proc" style="display:none;text-align:center;padding:28px">
+        <div style="font-size:36px;margin-bottom:10px">🔍</div>
+        <p style="font-weight:700;font-size:15px;margin-bottom:4px">Procesando imagen...</p>
+        <p class="fs12 c-tx3">Detectando códigos de láminas</p>
+        <div class="pb-track" style="max-width:200px;margin:16px auto 0">
+          <div class="pb-fill" id="ocr-bar" style="width:0%;transition:width .3s"></div>
+        </div>
+      </div>
+
+      <div id="scan-results" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div class="sec-title" style="font-size:14px;margin:0">
+            Láminas detectadas <span id="scan-cnt" style="color:var(--gold)"></span>
+          </div>
+          <button class="btn btn-ghost" style="padding:7px 12px;font-size:12px" onclick="addScanRow()">+ Manual</button>
+        </div>
+        <div id="scan-list"></div>
+        <div class="btn-grid" style="margin-top:14px">
+          <button class="btn btn-ghost full" onclick="clearScan()">✕ Cancelar</button>
+          <button class="btn btn-gold full" onclick="confirmScan()">✅ Confirmar</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════ REPETIDAS ═══════════════════ -->
+  <div class="page" id="page-rep">
+    <div class="topbar">
+      <div class="topbar-title">REPETIDAS</div>
+      <div id="rep-badge" class="badge">0</div>
+    </div>
+    <div class="scroll">
+      <div id="rep-body">
+        <div class="empty-state">
+          <div class="ei">🔄</div>
+          <p>No tienes láminas repetidas aún</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ INTERCAMBIOS ═══════════════════ -->
+  <div class="page" id="page-exc">
+    <div class="topbar"><div class="topbar-title">CAMBIOS</div></div>
+    <div class="scroll">
+
+      <div class="card mb12">
+        <div class="sec-title" style="font-size:14px;margin-bottom:10px">👤 Mi perfil</div>
+        <input type="text" id="uname-in" placeholder="Tu nombre de coleccionista" style="width:100%" oninput="saveUname()">
+      </div>
+
+      <div class="sec-title">📤 Compartir mi colección</div>
+      <div class="btn-grid mb8">
+        <button class="btn btn-gold" onclick="genQR()">📱 Generar QR</button>
+        <button class="btn btn-ghost" onclick="shareData()">📤 Compartir</button>
+      </div>
+      <button class="btn btn-ghost full mb12" onclick="copyRepList()">📋 Copiar lista de repetidas</button>
+
+      <div id="qr-box" style="display:none" class="exc-card">
+        <p class="fs12 c-tx3 mb8">Muestra este QR a tu amigo para comparar colecciones</p>
+        <canvas id="qr-cv" class="qr-canvas" width="200" height="200"></canvas>
+        <p id="qr-name" style="font-family:var(--ff-display);font-size:18px;letter-spacing:1px;color:var(--gold);margin-top:12px"></p>
+        <p id="qr-info" class="fs12 c-tx3" style="margin-top:3px"></p>
+      </div>
+
+      <hr class="divider">
+      <div class="sec-title">🔍 Importar colección de amigo</div>
+      <textarea id="imp-area" placeholder="Pega aquí el JSON de tu amigo o el texto copiado..."
+        style="width:100%;min-height:90px;resize:vertical;margin-bottom:9px"></textarea>
+      <button class="btn btn-gold full mb12" onclick="compareCollections()">⚽ Comparar colecciones</button>
+      <div id="match-body"></div>
+
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nb active" onclick="goPage('inicio',this)">
+    <span class="ni">🏠</span>Inicio
+  </button>
+  <button class="nb" onclick="goPage('album',this)">
+    <span class="ni">📗</span>Álbum
+  </button>
+  <button class="nb center-btn" onclick="goPage('scan',this)">
+    <div class="ni-wrap">📷</div>
+    <span style="font-size:9px;margin-top:2px;font-weight:700;letter-spacing:.4px">SCAN</span>
+  </button>
+  <button class="nb" onclick="goPage('rep',this)">
+    <span class="ni">🔄</span>Repet.
+  </button>
+  <button class="nb" onclick="goPage('exc',this)">
+    <span class="ni">🤝</span>Cambios
+  </button>
+</nav>
+
+<!-- MODAL: Detalle lámina -->
+<div class="mo" id="m-stk">
+  <div class="md">
+    <div class="md-handle"></div>
+    <div class="md-title" id="ms-title">COL 5</div>
+    <div id="ms-info" class="fs12 c-tx2 mb12"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px" id="ms-stats"></div>
+    <div style="display:grid;gap:9px" id="ms-actions"></div>
+  </div>
+</div>
+
+<!-- MODAL: Agregar manual -->
+<div class="mo" id="m-man">
+  <div class="md">
+    <div class="md-handle"></div>
+    <div class="md-title">+ AGREGAR LÁMINA</div>
+    <p class="fs12 c-tx2 mb12">
+      Formatos válidos: <span style="color:var(--lime);font-weight:700">COL 5</span> · <span style="color:var(--lime);font-weight:700">MEX 13</span> · <span style="color:var(--gold);font-weight:700">FWC 9</span> · <span style="color:var(--coke);font-weight:700">CC 3</span>
+    </p>
+    <input type="text" id="man-code" placeholder="Código de la lámina" style="width:100%;margin-bottom:9px"
+      oninput="this.value=this.value.toUpperCase()">
+    <div class="row mb16">
+      <label class="fs13 c-tx2">Cantidad:</label>
+      <input type="number" id="man-qty" value="1" min="1" max="99" style="width:80px;text-align:center">
+    </div>
+    <div class="btn-grid">
+      <button class="btn btn-ghost" onclick="closeM('m-man')">Cancelar</button>
+      <button class="btn btn-gold" onclick="doManualAdd()">✅ Agregar</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIBRARIES -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+//  PANINI FIFA WORLD CUP 2026™ — VERSIÓN LATINOAMERICANA
+//  Estructura real álbum físico impreso:
+//    • 980 láminas base: FWC (20) + 48 equipos × 20
+//    • 14 Coca-Cola: página especial dentro del álbum
+//    Total: 994 posiciones en el álbum
+//
+//  Extra Stickers (~80): NO van en el álbum, se rastrean por separado
+// ════════════════════════════════════════════════════════════════
+
+// ─── DATOS REALES DEL ÁLBUM ──────────────────────────────────
+
+// Sección FWC: 20 láminas (00 + FWC 1-19), todas FOIL
+const FWC = [
+  { id:'FWC 00', name:'Logo Panini',           foil:true },
+  { id:'FWC 1',  name:'Emblema Oficial',        foil:true },
+  { id:'FWC 2',  name:'Emblema Oficial',         foil:true },
+  { id:'FWC 3',  name:'Mascotas Oficiales',      foil:true },
+  { id:'FWC 4',  name:'Slogan Oficial',          foil:true },
+  { id:'FWC 5',  name:'Balón Oficial',           foil:true },
+  { id:'FWC 6',  name:'Canadá — País Anfitrión', foil:true },
+  { id:'FWC 7',  name:'México — País Anfitrión', foil:true },
+  { id:'FWC 8',  name:'USA — País Anfitrión',    foil:true },
+  { id:'FWC 9',  name:'Italia 1934',             foil:true },
+  { id:'FWC 10', name:'Uruguay 1950',            foil:true },
+  { id:'FWC 11', name:'Alemania Occ. 1954',      foil:true },
+  { id:'FWC 12', name:'Brasil 1962',             foil:true },
+  { id:'FWC 13', name:'Alemania Occ. 1974',      foil:true },
+  { id:'FWC 14', name:'Argentina 1986',          foil:true },
+  { id:'FWC 15', name:'Brasil 1994',             foil:true },
+  { id:'FWC 16', name:'Brasil 2002',             foil:true },
+  { id:'FWC 17', name:'Italia 2006',             foil:true },
+  { id:'FWC 18', name:'Alemania 2014',           foil:true },
+  { id:'FWC 19', name:'Argentina 2022',          foil:true },
+];
+
+// 48 equipos clasificados con siglas FIFA oficiales y grupos
+const TEAMS = [
+  { c:'MEX', n:'México',             f:'🇲🇽', g:'A' },
+  { c:'RSA', n:'Sudáfrica',          f:'🇿🇦', g:'A' },
+  { c:'KOR', n:'Corea del Sur',      f:'🇰🇷', g:'A' },
+  { c:'CZE', n:'Chequia',            f:'🇨🇿', g:'A' },
+  { c:'ESP', n:'España',             f:'🇪🇸', g:'B' },
+  { c:'MAR', n:'Marruecos',          f:'🇲🇦', g:'B' },
+  { c:'BRA', n:'Brasil',             f:'🇧🇷', g:'B' },
+  { c:'JPN', n:'Japón',              f:'🇯🇵', g:'B' },
+  { c:'GER', n:'Alemania',           f:'🇩🇪', g:'C' },
+  { c:'USA', n:'Estados Unidos',     f:'🇺🇸', g:'C' },
+  { c:'SRB', n:'Serbia',             f:'🇷🇸', g:'C' },
+  { c:'NZL', n:'Nueva Zelanda',      f:'🇳🇿', g:'C' },
+  { c:'FRA', n:'Francia',            f:'🇫🇷', g:'D' },
+  { c:'AUS', n:'Australia',          f:'🇦🇺', g:'D' },
+  { c:'TUR', n:'Turquía',            f:'🇹🇷', g:'D' },
+  { c:'CHI', n:'Chile',              f:'🇨🇱', g:'D' },
+  { c:'CAN', n:'Canadá',             f:'🇨🇦', g:'E' },
+  { c:'BIH', n:'Bosnia y Herz.',     f:'🇧🇦', g:'E' },
+  { c:'QAT', n:'Qatar',              f:'🇶🇦', g:'E' },
+  { c:'SUI', n:'Suiza',              f:'🇨🇭', g:'E' },
+  { c:'ENG', n:'Inglaterra',         f:'🏴󠁧󠁢󠁥󠁮󠁧󠁿', g:'F' },
+  { c:'NED', n:'Países Bajos',       f:'🇳🇱', g:'F' },
+  { c:'IRN', n:'Irán',               f:'🇮🇷', g:'F' },
+  { c:'CPV', n:'Cabo Verde',         f:'🇨🇻', g:'F' },
+  { c:'POR', n:'Portugal',           f:'🇵🇹', g:'G' },
+  { c:'COL', n:'Colombia',           f:'🇨🇴', g:'G' },
+  { c:'UZB', n:'Uzbekistán',         f:'🇺🇿', g:'G' },
+  { c:'COD', n:'Congo DR',           f:'🇨🇩', g:'G' },
+  { c:'ARG', n:'Argentina',          f:'🇦🇷', g:'H' },
+  { c:'NOR', n:'Noruega',            f:'🇳🇴', g:'H' },
+  { c:'SWE', n:'Suecia',             f:'🇸🇪', g:'H' },
+  { c:'IRQ', n:'Irak',               f:'🇮🇶', g:'H' },
+  { c:'CRO', n:'Croacia',            f:'🇭🇷', g:'I' },
+  { c:'ECU', n:'Ecuador',            f:'🇪🇨', g:'I' },
+  { c:'ALG', n:'Argelia',            f:'🇩🇿', g:'I' },
+  { c:'EGY', n:'Egipto',             f:'🇪🇬', g:'I' },
+  { c:'BEL', n:'Bélgica',            f:'🇧🇪', g:'J' },
+  { c:'AUT', n:'Austria',            f:'🇦🇹', g:'J' },
+  { c:'SCO', n:'Escocia',            f:'🏴󠁧󠁢󠁳󠁣󠁴󠁿', g:'J' },
+  { c:'PAN', n:'Panamá',             f:'🇵🇦', g:'J' },
+  { c:'NGA', n:'Nigeria',            f:'🇳🇬', g:'K' },
+  { c:'GHA', n:'Ghana',              f:'🇬🇭', g:'K' },
+  { c:'SEN', n:'Senegal',            f:'🇸🇳', g:'K' },
+  { c:'HTI', n:'Haití',              f:'🇭🇹', g:'K' },
+  { c:'URU', n:'Uruguay',            f:'🇺🇾', g:'L' },
+  { c:'KSA', n:'Arabia Saudita',     f:'🇸🇦', g:'L' },
+  { c:'HUN', n:'Hungría',            f:'🇭🇺', g:'L' },
+  { c:'CUW', n:'Curazao',            f:'🇨🇼', g:'L' },
+];
+
+// Coca-Cola: 14 láminas (versión latinoamericana) — página especial en el álbum
+const COKE = [
+  { id:'CC 1',  name:'Lamine Yamal',       team:'España'       },
+  { id:'CC 2',  name:'Joshua Kimmich',     team:'Alemania'     },
+  { id:'CC 3',  name:'Harry Kane',         team:'Inglaterra'   },
+  { id:'CC 4',  name:'Santiago Giménez',   team:'México'       },
+  { id:'CC 5',  name:'Antonee Robinson',   team:'USA'          },
+  { id:'CC 6',  name:'Jefferson Lerma',    team:'Colombia'     },
+  { id:'CC 7',  name:'Edson Álvarez',      team:'México'       },
+  { id:'CC 8',  name:'Virgil van Dijk',    team:'Países Bajos' },
+  { id:'CC 9',  name:'Alphonso Davies',    team:'Canadá'       },
+  { id:'CC 10', name:'Weston McKennie',    team:'USA'          },
+  { id:'CC 11', name:'Lautaro Martínez',   team:'Argentina'    },
+  { id:'CC 12', name:'Gabriel Magalhães',  team:'Brasil'       },
+  { id:'CC 13', name:'Luis Díaz',          team:'Colombia'     },
+  { id:'CC 14', name:'James Rodríguez',    team:'Colombia'     },
+];
+
+// ─── ÍNDICE MAESTRO ──────────────────────────────────────────
+
+function buildIndex() {
+  const idx = {};
+  // FWC
+  FWC.forEach(s => { idx[s.id] = { ...s, type:'fwc', section:'FWC' }; });
+  // Equipos
+  TEAMS.forEach(t => {
+    for (let i = 1; i <= 20; i++) {
+      const id = `${t.c} ${i}`;
+      idx[id] = {
+        id, type:'team', section:t.c,
+        team:t.c, teamName:t.n, flag:t.f, group:t.g,
+        num:i,
+        foil: i === 1,           // #1 = Escudo FOIL
+        photo: i === 13,         // #13 = Foto grupal
+        name: i === 1 ? `Escudo ${t.n}` : i === 13 ? `Foto Grupal ${t.n}` : `Jugador ${i}`,
+      };
+    }
+  });
+  // Coca-Cola
+  COKE.forEach(s => { idx[s.id] = { ...s, type:'coke', section:'CC', foil:false }; });
+  return idx;
+}
+
+const IDX = buildIndex();
+const TOTAL_BASE = 980;   // FWC(20) + equipos(48×20=960)
+const TOTAL_CC   = 14;
+const TOTAL_ALB  = TOTAL_BASE + TOTAL_CC; // 994 posiciones en el álbum
+
+// ─── STATE & DB ──────────────────────────────────────────────
+
+let db = null;
+let ST = {};      // { [id]: { id, got:bool, rep:int, date? } }
+let userName = '';
+let albumFilter = 'all';
+let cameraStream = null;
+
+async function dbInit() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('Panini2026v5', 1);
+    r.onerror = () => rej(r.error);
+    r.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('stk')) d.createObjectStore('stk', { keyPath:'id' });
+      if (!d.objectStoreNames.contains('cfg')) d.createObjectStore('cfg', { keyPath:'k' });
+    };
+    r.onsuccess = () => { db = r.result; res(); };
+  });
+}
+const dbGet  = (st,k)   => new Promise(r => { const q=db.transaction(st,'readonly').objectStore(st).get(k); q.onsuccess=()=>r(q.result); q.onerror=()=>r(null); });
+const dbPut  = (st,v)   => new Promise(r => { const tx=db.transaction(st,'readwrite'); tx.objectStore(st).put(v); tx.oncomplete=r; });
+const dbDel  = (st,k)   => new Promise(r => { const tx=db.transaction(st,'readwrite'); tx.objectStore(st).delete(k); tx.oncomplete=r; });
+const dbAll  = (st)     => new Promise(r => { const q=db.transaction(st,'readonly').objectStore(st).getAll(); q.onsuccess=()=>r(q.result||[]); q.onerror=()=>r([]); });
+
+async function loadAll() {
+  const rows = await dbAll('stk');
+  ST = {};
+  rows.forEach(r => ST[r.id] = r);
+  const u = await dbGet('cfg','uname');
+  if (u) { userName = u.v; const el=document.getElementById('uname-in'); if(el) el.value=userName; }
+}
+
+// ─── STATS ───────────────────────────────────────────────────
+
+function stats() {
+  let got=0, rep=0;
+  Object.values(ST).forEach(s => {
+    if (s.got) got++;
+    if (s.rep > 0) rep += s.rep;
+  });
+  const pct = Math.round((Math.min(got, TOTAL_BASE) / TOTAL_BASE) * 100);
+  const fwcGot  = FWC.filter(s => ST[s.id]?.got).length;
+  const ccGot   = COKE.filter(s => ST[s.id]?.got).length;
+  return { got, rep, mis: TOTAL_BASE - Math.min(got, TOTAL_BASE), pct, fwcGot, ccGot };
+}
+
+function refreshStats() {
+  const s = stats();
+  // Hero
+  document.getElementById('h-pct').innerHTML = s.pct + '<span>%</span>';
+  document.getElementById('h-sub').textContent = `${s.got} de ${TOTAL_BASE} láminas completadas`;
+  document.getElementById('h-fill').style.width = s.pct + '%';
+  document.getElementById('h-got-lbl').textContent = `${s.got} obtenidas`;
+  document.getElementById('h-mis-lbl').textContent = `${s.mis} faltantes`;
+  const ring = document.getElementById('ring');
+  if (ring) { const c=188.5; ring.style.strokeDashoffset = c - (s.pct/100)*c; }
+  // Stat cards
+  document.getElementById('s-got').textContent = s.got;
+  document.getElementById('s-mis').textContent = s.mis;
+  document.getElementById('s-rep').textContent = s.rep;
+  // Album badge
+  const ap = document.getElementById('al-pct-label'); if(ap) ap.textContent = s.pct+'%';
+  // Rep badge
+  const rb = document.getElementById('rep-badge'); if(rb) rb.textContent = s.rep;
+  // Sections
+  document.getElementById('s-fwc-n').textContent = `${s.fwcGot}/20`;
+  document.getElementById('s-fwc-bar').style.width = Math.round((s.fwcGot/20)*100)+'%';
+  document.getElementById('s-cc-n').textContent = `${s.ccGot}/14`;
+  document.getElementById('s-cc-bar').style.width = Math.round((s.ccGot/14)*100)+'%';
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────
+
+function goPage(pid, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + pid).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (pid === 'inicio')  renderInicio();
+  if (pid === 'album')   renderAlbum();
+  if (pid === 'rep')     renderRep();
+}
+
+function goAlbumFilter(f) {
+  goPage('album', document.querySelectorAll('.nb')[1]);
+  setTimeout(() => {
+    albumFilter = f;
+    document.querySelectorAll('#al-chips .chip').forEach(c => c.classList.remove('active'));
+    const map = { all:0, got:1, mis:2, dup:3, fwc:4, coke:5 };
+    const chips = document.querySelectorAll('#al-chips .chip');
+    if (chips[map[f]]) chips[map[f]].classList.add('active');
+    renderAlbum();
+  }, 50);
+}
+
+// ─── INICIO ──────────────────────────────────────────────────
+
+function renderInicio() {
+  refreshStats();
+  // Top equipos — ordenados por más láminas obtenidas
+  const teamData = TEAMS.map(t => {
+    const got = Array.from({length:20}, (_,i) => `${t.c} ${i+1}`).filter(id => ST[id]?.got).length;
+    return { ...t, got, pct: Math.round((got/20)*100) };
+  }).sort((a,b) => b.got - a.got).slice(0, 8);
+
+  document.getElementById('ini-teams').innerHTML = teamData.map(t => `
+    <div class="team-card" onclick="goAlbumSection('${t.c}')">
+      <div class="team-card-head">
+        <div class="row">
+          <span class="team-flag">${t.f}</span>
+          <div>
+            <div class="team-name">${t.n}</div>
+            <span class="team-group">Grupo ${t.g}</span>
+          </div>
+        </div>
+        <div class="team-pct">${t.pct}%</div>
+      </div>
+      <div class="pb-track"><div class="pb-fill" style="width:${t.pct}%"></div></div>
+      <div class="pb-labels"><span>${t.got}/20 láminas</span><span>${20-t.got} faltantes</span></div>
+    </div>`).join('');
+}
+
+function goAlbumSection(teamCode) {
+  goPage('album', document.querySelectorAll('.nb')[1]);
+  setTimeout(() => {
+    albumFilter = 'all';
+    document.querySelectorAll('#al-chips .chip').forEach((c,i) => c.classList.toggle('active', i===0));
+    renderAlbum();
+    setTimeout(() => {
+      const el = document.getElementById('sec-' + teamCode);
+      if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+    }, 100);
+  }, 60);
+}
+
+// ─── ÁLBUM ───────────────────────────────────────────────────
+
+function setFilter(f, btn) {
+  albumFilter = f;
+  document.querySelectorAll('#al-chips .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderAlbum();
+}
+
+function applyStateFilter(ids) {
+  if (albumFilter === 'got') return ids.filter(id => ST[id]?.got && !(ST[id]?.rep > 0));
+  if (albumFilter === 'mis') return ids.filter(id => !ST[id]?.got);
+  if (albumFilter === 'dup') return ids.filter(id => ST[id]?.rep > 0);
+  return ids;
+}
+
+function renderAlbum() {
+  const body = document.getElementById('album-body');
+  if (!body) return;
+  const q = (document.getElementById('al-search')?.value || '').toUpperCase().trim();
+  let html = '';
+
+  // ── FWC ──
+  const showFWC = albumFilter === 'all' || albumFilter === 'fwc' || albumFilter === 'got' || albumFilter === 'mis' || albumFilter === 'dup';
+  if (showFWC) {
+    let ids = applyStateFilter(FWC.map(s => s.id));
+    if (q) ids = ids.filter(id => id.replace(' ','').includes(q.replace(' ','')) || IDX[id]?.name?.toUpperCase().includes(q));
+    if (ids.length) {
+      const got = FWC.filter(s => ST[s.id]?.got).length;
+      html += buildSection('sec-FWC', '🌍', 'FWC — Intro e Historia', `${got}/20`, ids, 'FWC', null);
+    }
+  }
+
+  // ── EQUIPOS ──
+  if (albumFilter !== 'fwc' && albumFilter !== 'coke') {
+    const grupos = [...new Set(TEAMS.map(t => t.g))];
+    grupos.forEach(g => {
+      TEAMS.filter(t => t.g === g).forEach(t => {
+        let ids = applyStateFilter(Array.from({length:20}, (_,i) => `${t.c} ${i+1}`));
+        if (q) ids = ids.filter(id => {
+          const num = id.split(' ')[1];
+          return id.replace(' ','').includes(q.replace(' ','')) ||
+                 t.n.toUpperCase().includes(q) || t.c.includes(q) || num === q;
+        });
+        if (!ids.length) return;
+        const got = Array.from({length:20}, (_,i) => `${t.c} ${i+1}`).filter(id => ST[id]?.got).length;
+        html += buildSection(`sec-${t.c}`, t.f, `${t.n}`, `${got}/20`, ids, t.c, t.g);
+      });
+    });
+  }
+
+  // ── COCA-COLA ──
+  if (albumFilter === 'all' || albumFilter === 'coke') {
+    let ids = applyStateFilter(COKE.map(s => s.id));
+    if (q) ids = ids.filter(id => id.includes(q) || IDX[id]?.name?.toUpperCase().includes(q) || IDX[id]?.team?.toUpperCase().includes(q));
+    if (ids.length) {
+      const got = COKE.filter(s => ST[s.id]?.got).length;
+      html += buildSection('sec-CC', '🥤', 'Coca-Cola™ — Exclusivas', `${got}/14`, ids, 'CC', null);
+    }
+  }
+
+  body.innerHTML = html || '<div class="empty-state"><div class="ei">🔍</div><p>Sin resultados para tu búsqueda</p></div>';
+}
+
+function buildSection(sid, flag, name, progress, ids, sectionCode, group) {
+  const cells = ids.map(id => buildCell(id)).join('');
+  const groupBadge = group ? `<span class="sec-group">Grupo ${group}</span>` : '';
+  return `<div id="${sid}" style="margin-bottom:18px">
+    <div class="sec-header">
+      <div class="sec-header-left">
+        <span class="sec-flag">${flag}</span>
+        <div>
+          <span class="sec-name">${name}</span>
+          ${groupBadge}
+        </div>
+      </div>
+      <span class="sec-progress">${progress}</span>
+    </div>
+    <div class="stk-grid">${cells}</div>
+  </div>`;
+}
+
+function buildCell(id) {
+  const info = IDX[id];
+  if (!info) return '';
+  const s = ST[id];
+  const got = s?.got || false;
+  const rep = s?.rep || 0;
+
+  let cls = 'stk';
+  if (info.foil) cls += ' foil';
+  if (info.type === 'coke') cls += ' coke';
+  if (got && rep > 0) cls += ' dup';
+  else if (got) cls += ' got';
+  else cls += ' mis';
+  if (info.photo && !info.foil) cls += ' photo';
+
+  const parts = id.split(' ');
+  const teamCode = parts[0];
+  const numDisp  = parts.slice(1).join(' ');
+
+  const repHtml  = rep > 0 ? `<span class="rep-badge">×${rep+1}</span>` : '';
+  const foilDot  = info.foil ? `<span class="foil-dot">✨</span>` : '';
+
+  let numLabel;
+  if (info.photo) {
+    numLabel = `<span class="stk-num" style="font-size:8px;font-weight:800;line-height:1.2;text-align:center">FOTO</span>`;
+  } else {
+    numLabel = `<span class="stk-num">${numDisp}</span>`;
+  }
+
+  return `<div class="${cls}" onclick="openStk('${id}')" title="${info.name || id}">
+    ${foilDot}${repHtml}
+    <span class="stk-team">${teamCode}</span>
+    ${numLabel}
+  </div>`;
+}
+
+// ─── STICKER MODAL ───────────────────────────────────────────
+
+let curStk = null;
+function openStk(id) {
+  curStk = id;
+  const info = IDX[id];
+  const s = ST[id] || { got:false, rep:0 };
+  const team = TEAMS.find(t => t.c === info?.team);
+  const flag = team ? team.f : (info?.type==='fwc' ? '🌍' : info?.type==='coke' ? '🥤' : '⚽');
+
+  document.getElementById('ms-title').textContent = `${flag} ${id}`;
+  document.getElementById('ms-info').textContent = info?.name || '';
+
+  document.getElementById('ms-stats').innerHTML = `
+    <div style="background:var(--pitch3);border-radius:var(--rs);padding:12px;text-align:center">
+      <div style="font-family:var(--ff-display);font-size:28px;color:${s.got?'var(--lime)':'var(--red)'};line-height:1">${s.got?'✅':'❌'}</div>
+      <div class="fs11 c-tx3" style="margin-top:3px;text-transform:uppercase;font-weight:700">${s.got?'Obtenida':'Faltante'}</div>
+    </div>
+    <div style="background:var(--pitch3);border-radius:var(--rs);padding:12px;text-align:center">
+      <div style="font-family:var(--ff-display);font-size:28px;color:var(--gold);line-height:1">${s.rep||0}</div>
+      <div class="fs11 c-tx3" style="margin-top:3px;text-transform:uppercase;font-weight:700">Repetidas</div>
+    </div>`;
+
+  const isCoke = info?.type === 'coke';
+  if (s.got) {
+    document.getElementById('ms-actions').innerHTML = `
+      <button class="btn ${isCoke?'btn-coke':'btn-ghost'} full" onclick="doAddRep('${id}')">🔄 Agregar repetida</button>
+      ${s.rep > 0 ? `<button class="btn btn-ghost full" onclick="doRemRep('${id}')">➖ Quitar repetida</button>` : ''}
+      <button class="btn btn-red full" onclick="doRemStk('${id}')">🗑 Quitar del álbum</button>
+      <button class="btn btn-ghost full" onclick="closeM('m-stk')">Cerrar</button>`;
+  } else {
+    document.getElementById('ms-actions').innerHTML = `
+      <button class="btn btn-lime full" onclick="doAddStk('${id}',1)">✅ Marcar como obtenida</button>
+      ${isCoke ? '<p class="fs11 c-coke" style="text-align:center;margin-top:4px">🥤 Solo en botellas Coca-Cola</p>' : ''}
+      <button class="btn btn-ghost full" onclick="closeM('m-stk')">Cerrar</button>`;
+  }
+  openM('m-stk');
+}
+
+// ─── STICKER OPERATIONS ──────────────────────────────────────
+
+async function doAddStk(id, qty = 1) {
+  const ex = ST[id] || { id, got:false, rep:0 };
+  if (ex.got) { ex.rep = (ex.rep||0) + (qty-1); }
+  else { ex.got = true; ex.rep = qty-1; ex.date = new Date().toISOString(); }
+  ST[id] = ex;
+  await dbPut('stk', ex);
+  toast('✅ ' + id + ' obtenida');
+  doRefresh();
+}
+
+async function doAddRep(id) {
+  const s = ST[id] || { id, got:true, rep:0 };
+  s.rep = (s.rep||0) + 1;
+  ST[id] = s;
+  await dbPut('stk', s);
+  toast('🔄 Repetida de ' + id);
+  closeM('m-stk'); doRefresh();
+}
+
+async function doRemRep(id) {
+  const s = ST[id]; if (!s) return;
+  s.rep = Math.max(0, (s.rep||1) - 1);
+  await dbPut('stk', s);
+  toast('✅ Repetida eliminada');
+  closeM('m-stk'); doRefresh();
+}
+
+async function doRemStk(id) {
+  delete ST[id];
+  await dbDel('stk', id);
+  toast('❌ ' + id + ' eliminada');
+  closeM('m-stk'); doRefresh();
+}
+
+function doRefresh() {
+  refreshStats();
+  const ap = document.querySelector('.page.active');
+  if (!ap) return;
+  const pid = ap.id.replace('page-','');
+  if (pid === 'inicio') renderInicio();
+  if (pid === 'album')  renderAlbum();
+  if (pid === 'rep')    renderRep();
+}
+
+// ─── MANUAL ADD ──────────────────────────────────────────────
+
+function openManual() {
+  document.getElementById('man-code').value = '';
+  document.getElementById('man-qty').value = '1';
+  openM('m-man');
+}
+
+async function doManualAdd() {
+  const raw = document.getElementById('man-code').value.trim().toUpperCase();
+  const qty = parseInt(document.getElementById('man-qty').value) || 1;
+  if (!raw) { toast('⚠️ Ingresa un código'); return; }
+
+  // Normalizar: quitar espacio extra
+  const norm = raw.replace(/\s+/, ' ').trim();
+
+  // Buscar directamente
+  if (IDX[norm]) {
+    await doAddStk(norm, qty);
+    closeM('m-man'); return;
+  }
+  // Intentar formato sin espacio: COL5 → COL 5
+  const m = norm.match(/^([A-Z]{2,4})\s*(\d{1,3})$/);
+  if (m) {
+    const id = m[1] + ' ' + parseInt(m[2]);
+    if (IDX[id]) { await doAddStk(id, qty); closeM('m-man'); return; }
+  }
+  toast('⚠️ Código no existe en el álbum');
+}
+
+// ─── SCANNER ─────────────────────────────────────────────────
+
+async function startCam() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video:{ facingMode:'environment', width:{ideal:1920}, height:{ideal:1080} }
+    });
+    cameraStream = stream;
+    const vid = document.getElementById('scan-video');
+    vid.srcObject = stream; vid.style.display = 'block';
+    document.getElementById('scan-ph').style.display = 'none';
+    document.getElementById('scan-zone').style.background = '#000';
+    const btn = document.getElementById('btn-cam');
+    btn.textContent = '📸 Capturar foto';
+    btn.onclick = doCapture;
+  } catch(e) {
+    toast('⚠️ Sin acceso a cámara. Usa Galería.');
+    document.getElementById('file-input').click();
+  }
+}
+
+function doCapture() {
+  const vid = document.getElementById('scan-video');
+  const cv  = document.getElementById('scan-canvas');
+  cv.width = vid.videoWidth; cv.height = vid.videoHeight;
+  cv.getContext('2d').drawImage(vid, 0, 0);
+  stopCam();
+  const prev = document.getElementById('scan-prev');
+  prev.src = cv.toDataURL('image/jpeg', .92); prev.style.display = 'block';
+  document.getElementById('scan-zone').style.background = 'var(--pitch3)';
+  processImg(cv);
+}
+
+function stopCam() {
+  if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
+  const vid = document.getElementById('scan-video');
+  vid.style.display = 'none'; vid.srcObject = null;
+  const btn = document.getElementById('btn-cam');
+  btn.textContent = '📷 Usar cámara'; btn.onclick = startCam;
+}
+
+function onFile(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const cv = document.getElementById('scan-canvas');
+      cv.width = img.width; cv.height = img.height;
+      cv.getContext('2d').drawImage(img, 0, 0);
+      const prev = document.getElementById('scan-prev');
+      prev.src = ev.target.result; prev.style.display = 'block';
+      document.getElementById('scan-ph').style.display = 'none';
+      processImg(cv);
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+async function processImg(cv) {
+  document.getElementById('scan-tip').style.display = 'none';
+  document.getElementById('scan-proc').style.display = 'block';
+  document.getElementById('scan-results').style.display = 'none';
+  const bar = document.getElementById('ocr-bar'); bar.style.width = '8%';
+  try {
+    const wk = await Tesseract.createWorker('eng', 1, {
+      logger: m => { if (m.status === 'recognizing text') bar.style.width = Math.round(m.progress*80+10)+'%'; }
+    });
+    await wk.setParameters({
+      tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',
+      tessedit_pageseg_mode: Tesseract.PSM.AUTO,
+    });
+    const { data:{ text } } = await wk.recognize(cv);
+    await wk.terminate();
+    bar.style.width = '100%';
+    showScanResults(extractCodes(text));
+  } catch(e) {
+    console.error(e);
+    document.getElementById('scan-proc').style.display = 'none';
+    document.getElementById('scan-tip').style.display = 'block';
+    toast('⚠️ Error de OCR. Intenta con mejor iluminación.');
+    showScanResults([]);
+  }
+}
+
+function extractCodes(text) {
+  const found = new Set();
+  const re = /\b([A-Z]{2,4})\s*(\d{1,3})\b/g;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    const id = m[1] + ' ' + parseInt(m[2]);
+    if (IDX[id]) found.add(id);
+  }
+  return [...found];
+}
+
+function showScanResults(codes) {
+  document.getElementById('scan-proc').style.display = 'none';
+  document.getElementById('scan-results').style.display = 'block';
+  document.getElementById('scan-cnt').textContent = '(' + codes.length + ')';
+  const list = document.getElementById('scan-list');
+  list.innerHTML = codes.map((c, i) => `
+    <div class="row" id="sr-${i}" style="padding:10px;background:var(--surface);border:1px solid var(--bor);border-radius:var(--rs);margin-bottom:7px">
+      <div style="width:48px;height:48px;border-radius:8px;background:linear-gradient(135deg,var(--gold),#c8900a);color:#000;font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center;text-align:center;flex-shrink:0;line-height:1.2">${c}</div>
+      <input type="text" value="${c}" style="flex:1;font-family:monospace;font-size:13px" oninput="this.value=this.value.toUpperCase()">
+      <button style="background:none;border:none;color:var(--red);font-size:20px;cursor:pointer;padding:3px" onclick="document.getElementById('sr-${i}').remove();updateScanCnt()">×</button>
+    </div>`).join('') ||
+    '<div class="empty-state" style="padding:18px"><p class="fs12 c-tx3">No se detectaron códigos automáticamente.<br>Añade manualmente con el botón "+ Manual".</p></div>';
+}
+
+function addScanRow() {
+  const i = Date.now();
+  const div = document.createElement('div');
+  div.className = 'row'; div.id = 'sr-' + i;
+  div.style.cssText = 'padding:10px;background:var(--surface);border:1px solid var(--bor);border-radius:var(--rs);margin-bottom:7px';
+  div.innerHTML = `
+    <div id="sr-badge-${i}" style="width:48px;height:48px;border-radius:8px;background:var(--pitch4);color:var(--tx3);font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center;text-align:center;flex-shrink:0">?</div>
+    <input type="text" placeholder="COL 5" style="flex:1;font-family:monospace;font-size:13px"
+      oninput="this.value=this.value.toUpperCase();document.getElementById('sr-badge-${i}').textContent=this.value||'?'">
+    <button style="background:none;border:none;color:var(--red);font-size:20px;cursor:pointer;padding:3px" onclick="this.parentElement.remove();updateScanCnt()">×</button>`;
+  document.getElementById('scan-list').appendChild(div);
+  div.querySelector('input').focus();
+  updateScanCnt();
+}
+
+function updateScanCnt() {
+  document.getElementById('scan-cnt').textContent = '(' + document.querySelectorAll('#scan-list .row').length + ')';
+}
+
+async function confirmScan() {
+  const inputs = document.querySelectorAll('#scan-list input');
+  const codes = [];
+  inputs.forEach(inp => {
+    const v = inp.value.trim().toUpperCase();
+    const m = v.match(/^([A-Z]{2,4})\s*(\d{1,3})$/);
+    if (m) { const id = m[1]+' '+parseInt(m[2]); if (IDX[id]) codes.push(id); }
+  });
+  if (!codes.length) { toast('⚠️ Sin láminas válidas para confirmar'); return; }
+  for (const c of codes) await doAddStk(c, 1);
+  toast('✅ ' + codes.length + ' láminas agregadas');
+  clearScan();
+}
+
+function clearScan() {
+  document.getElementById('scan-results').style.display = 'none';
+  document.getElementById('scan-tip').style.display = 'block';
+  document.getElementById('scan-list').innerHTML = '';
+  document.getElementById('scan-prev').style.display = 'none';
+  document.getElementById('scan-ph').style.display = 'flex';
+  stopCam();
+}
+
+// ─── REPETIDAS ───────────────────────────────────────────────
+
+function renderRep() {
+  const body = document.getElementById('rep-body'); if (!body) return;
+  const reps = Object.values(ST)
+    .filter(s => s.got && s.rep > 0)
+    .sort((a,b) => a.id.localeCompare(b.id));
+  if (!reps.length) {
+    body.innerHTML = '<div class="empty-state"><div class="ei">🔄</div><p>No tienes láminas repetidas aún</p></div>';
+    return;
+  }
+  body.innerHTML = reps.map(s => {
+    const info = IDX[s.id];
+    const team = TEAMS.find(t => t.c === info?.team);
+    const flag = team ? team.f : (info?.type==='fwc'?'🌍':'🥤');
+    const sub  = team ? team.n : (info?.name || '');
+    return `<div class="rep-item">
+      <div>
+        <div class="rep-code">${flag} ${s.id}</div>
+        <div class="rep-sub">${sub}</div>
+      </div>
+      <div class="row">
+        <span class="rep-cnt">×${s.rep}</span>
+        <button class="btn btn-ghost" style="padding:7px 11px;font-size:12px" onclick="openStk('${s.id}')">✏️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── INTERCAMBIOS ────────────────────────────────────────────
+
+function saveUname() {
+  userName = document.getElementById('uname-in').value;
+  dbPut('cfg', { k:'uname', v:userName });
+}
+
+function getSharePayload() {
+  const reps   = Object.values(ST).filter(s => s.got && s.rep > 0).map(s => ({ id:s.id, qty:s.rep }));
+  const missing = Object.keys(IDX).filter(id => !ST[id]?.got);
+  return { user: userName||'Coleccionista', reps, missing, pct: stats().pct, date: new Date().toISOString() };
+}
+
+function genQR() {
+  const d = getSharePayload();
+  const compact = { u:d.user, r:d.reps.slice(0,50), m:d.missing.slice(0,100) };
+  const json = JSON.stringify(compact);
+  document.getElementById('qr-box').style.display = 'block';
+  document.getElementById('qr-name').textContent = '⚽ ' + d.user;
+  document.getElementById('qr-info').textContent = d.reps.length + ' repetidas · ' + d.missing.length + ' faltantes · ' + d.pct + '%';
+  const cv = document.getElementById('qr-cv');
+  cv.width = 200; cv.height = 200;
+  if (typeof QRCode !== 'undefined') {
+    cv.getContext('2d').clearRect(0,0,200,200);
+    try {
+      new QRCode(cv, { text:json, width:200, height:200, colorDark:'#f5c842', colorLight:'#031a0e', correctLevel:QRCode.CorrectLevel.M });
+    } catch(e) { qrFallback(cv, d.user); }
+  } else { qrFallback(cv, d.user); }
+  cv.scrollIntoView({ behavior:'smooth' });
+}
+
+function qrFallback(cv, name) {
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#031a0e'; ctx.fillRect(0,0,200,200);
+  ctx.fillStyle = '#f5c842'; ctx.font = 'bold 14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('⚽ ' + name, 100, 88);
+  ctx.fillStyle = '#4a7055'; ctx.font = '11px sans-serif';
+  ctx.fillText('Usa "Compartir" para', 100, 112);
+  ctx.fillText('enviar tu colección', 100, 130);
+}
+
+async function shareData() {
+  const d = getSharePayload();
+  const json = JSON.stringify(d, null, 2);
+  if (navigator.share) {
+    try { await navigator.share({ title:'Mi Álbum Panini 2026 · '+d.user, text:json }); return; }
+    catch(e) {}
+  }
+  try { await navigator.clipboard.writeText(json); toast('📋 Copiado al portapapeles'); }
+  catch(e) { toast('⚠️ No se pudo copiar'); }
+}
+
+async function copyRepList() {
+  const reps = Object.values(ST).filter(s => s.got && s.rep > 0).sort((a,b) => a.id.localeCompare(b.id));
+  if (!reps.length) { toast('Sin repetidas para copiar'); return; }
+  const txt = `⚽ Repetidas de ${userName||'Álbum Panini 2026'}\n\n` +
+              reps.map(s => `${s.id} ×${s.rep}`).join('\n') +
+              `\n\nTotal: ${reps.length} tipos`;
+  try { await navigator.clipboard.writeText(txt); toast('📋 Lista copiada'); }
+  catch(e) { toast('⚠️ Error al copiar'); }
+}
+
+function compareCollections() {
+  const raw = document.getElementById('imp-area').value.trim();
+  if (!raw) { toast('⚠️ Pega la lista de tu amigo'); return; }
+  let friend;
+  try {
+    friend = JSON.parse(raw);
+    if (!friend.reps && !friend.missing) throw new Error('');
+  } catch(e) {
+    const codes = extractCodes(raw.toUpperCase());
+    friend = { user:'Amigo', reps:codes.map(id => ({id, qty:1})), missing:[] };
+  }
+  showMatchResults(friend);
+}
+
+function showMatchResults(fr) {
+  const myReps    = Object.values(ST).filter(s => s.got && s.rep > 0);
+  const myMissing = Object.keys(IDX).filter(id => !ST[id]?.got);
+  const frRepIds  = (fr.reps||[]).map(r => typeof r==='string' ? r : r.id);
+  const frMissIds = (fr.missing||[]).map(r => typeof r==='string' ? r : r.id);
+  const iGive     = myReps.filter(s => frMissIds.includes(s.id));
+  const theyGive  = frRepIds.filter(id => myMissing.includes(id));
+  const el = document.getElementById('match-body');
+  if (!iGive.length && !theyGive.length) {
+    el.innerHTML = `<div class="empty-state" style="padding:20px"><div class="ei">🤷</div><p>Sin coincidencias con ${fr.user||'tu amigo'}</p></div>`;
+    return;
+  }
+  const tag = (id, color, bg, border) =>
+    `<span style="background:${bg};color:${color};border:1px solid ${border};padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;display:inline-block;margin:2px">${id}</span>`;
+  el.innerHTML = `
+    <div style="font-family:var(--ff-display);font-size:16px;letter-spacing:.5px;color:var(--tx2);margin-bottom:10px">RESULTADOS CON ${(fr.user||'AMIGO').toUpperCase()}</div>
+    ${iGive.length ? `
+      <div class="match-ok">✅ Tienes <strong style="color:var(--white)">${iGive.length}</strong> que ${fr.user||'tu amigo'} necesita</div>
+      <div class="card card-sm mb12">
+        <div class="fs11 c-tx3 fw9 mb8">YO PUEDO DAR</div>
+        <div style="display:flex;flex-wrap:wrap;gap:3px">${iGive.map(s=>tag(s.id,'var(--lime)','var(--lime-bg)','rgba(127,255,0,.3)')).join('')}</div>
+      </div>` : ''}
+    ${theyGive.length ? `
+      <div class="match-ok" style="background:var(--gold-bg);border-color:rgba(245,200,66,.3);color:var(--gold)">🎯 ${fr.user||'Tu amigo'} tiene <strong style="color:var(--white)">${theyGive.length}</strong> que tú necesitas</div>
+      <div class="card card-sm mb12">
+        <div class="fs11 c-tx3 fw9 mb8">ELLOS PUEDEN DAR</div>
+        <div style="display:flex;flex-wrap:wrap;gap:3px">${theyGive.map(id=>tag(id,'var(--gold)','var(--gold-bg)','rgba(245,200,66,.3)')).join('')}</div>
+      </div>` : ''}`;
+}
+
+// ─── MODALS ──────────────────────────────────────────────────
+
+const openM  = id => document.getElementById(id).classList.add('open');
+const closeM = id => document.getElementById(id).classList.remove('open');
+document.querySelectorAll('.mo').forEach(el =>
+  el.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); })
+);
+
+// ─── TOAST ───────────────────────────────────────────────────
+
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.style.display = 'block';
+  el.style.animation = 'none'; el.offsetHeight;
+  el.style.animation = 'tIn .25s ease, tOut .25s ease 2.2s forwards';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.style.display = 'none', 2600);
+}
+
+// ─── PWA ─────────────────────────────────────────────────────
+
+function injectManifest() {
+  const m = {
+    name:'Álbum Panini FIFA 2026',
+    short_name:'Panini 2026',
+    start_url:'.', display:'standalone',
+    background_color:'#031a0e', theme_color:'#f5c842',
+    orientation:'portrait-primary',
+    icons:[{
+      src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="40" fill="%23031a0e"/><text y="130" x="96" font-size="110" text-anchor="middle">⚽</text></svg>',
+      sizes:'192x192', type:'image/svg+xml'
+    }]
+  };
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = URL.createObjectURL(new Blob([JSON.stringify(m)], { type:'application/json' }));
+  document.head.appendChild(link);
+}
+
+function registerSW() {
+  if (!('serviceWorker' in navigator)) return;
+  const code = `
+const C='panini2026-v5';
+self.addEventListener('install',e=>{
+  e.waitUntil(caches.open(C).then(c=>c.addAll([location.href])));
+  self.skipWaiting();
+});
+self.addEventListener('activate',e=>{
+  e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))));
+  self.clients.claim();
+});
+self.addEventListener('fetch',e=>{
+  e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match(location.href))));
+});`.trim();
+  navigator.serviceWorker.register(
+    URL.createObjectURL(new Blob([code], { type:'application/javascript' }))
+  ).catch(() => {});
+}
+
+// ─── INIT ────────────────────────────────────────────────────
+
+async function init() {
+  const bar = document.getElementById('load-bar');
+  const msg = document.getElementById('load-msg');
+
+  msg.textContent = 'Abriendo base de datos...'; bar.style.width = '20%';
+  await dbInit();
+
+  msg.textContent = 'Cargando tu colección...'; bar.style.width = '55%';
+  await loadAll();
+
+  msg.textContent = 'Preparando álbum...'; bar.style.width = '80%';
+  refreshStats();
+  renderInicio();
+  injectManifest();
+  registerSW();
+
+  bar.style.width = '100%';
+  setTimeout(() => {
+    const ls = document.getElementById('loading');
+    ls.style.transition = 'opacity .35s';
+    ls.style.opacity = '0';
+    setTimeout(() => ls.remove(), 380);
+  }, 400);
+}
+
+init();
+</script>
+</body>
+</html>
