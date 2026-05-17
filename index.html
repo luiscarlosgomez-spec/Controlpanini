@@ -476,20 +476,23 @@ input::placeholder,textarea::placeholder{color:var(--tx3)}
 //  STICKER GOL 2026 — v4.1 — TODOS LOS AJUSTES
 // ═══════════════════════════════════════════════════════
 
-// ── AUDIO BEEP ──
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
+// ── AUDIO BEEP — contexto único compartido ──
+let _ac = null;
 function beep() {
   try {
-    const ac = new AudioCtx();
-    const o = ac.createOscillator();
-    const g = ac.createGain();
-    o.connect(g); g.connect(ac.destination);
-    o.frequency.value = 880;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    if (!_ac) _ac = new AC();
+    if (_ac.state === 'suspended') _ac.resume();
+    const o = _ac.createOscillator();
+    const g = _ac.createGain();
+    o.connect(g); g.connect(_ac.destination);
     o.type = 'sine';
-    g.gain.setValueAtTime(.3, ac.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + .15);
-    o.start(ac.currentTime);
-    o.stop(ac.currentTime + .15);
+    o.frequency.value = 900;
+    g.gain.setValueAtTime(0.4, _ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, _ac.currentTime + 0.12);
+    o.start(_ac.currentTime);
+    o.stop(_ac.currentTime + 0.12);
   } catch(e) {}
 }
 
@@ -828,70 +831,87 @@ function renderAlbum() {
   setupLongPress();
 }
 
-// ── LONG PRESS (corregido para iOS/Android) ──
-let pressTimer = null, pressEl = null;
+// ── LONG PRESS — corregido iOS/Android ──
+// CLAVE: NO usar e.preventDefault() en touchstart → deja que click dispare normalmente
+// El long press se detecta con timer; si se cumple, cancela el click con flag
+let _pressTimer = null;
+let _isLongPress = false;
 
 function setupLongPress() {
   document.querySelectorAll('.stk').forEach(el => {
-    // Eliminar listeners previos clonando el nodo
     const fresh = el.cloneNode(true);
     el.parentNode.replaceChild(fresh, el);
     const id = fresh.dataset.id;
 
-    // TAP
-    fresh.addEventListener('click', () => stkTap(id));
+    // CLICK (tap normal) — solo actúa si NO fue long press
+    fresh.addEventListener('click', () => {
+      if (_isLongPress) { _isLongPress = false; return; }
+      stkTap(id);
+    });
 
-    // LONG PRESS touch
-    fresh.addEventListener('touchstart', e => {
-      e.preventDefault();
+    // TOUCH START — inicia timer long press SIN preventDefault
+    fresh.addEventListener('touchstart', () => {
+      _isLongPress = false;
       fresh.classList.add('pressing');
-      pressTimer = setTimeout(() => {
+      _pressTimer = setTimeout(() => {
+        _isLongPress = true;
         fresh.classList.remove('pressing');
         stkLong(id);
-      }, 600);
-    }, {passive: false});
-    fresh.addEventListener('touchend', () => {
-      clearTimeout(pressTimer);
-      fresh.classList.remove('pressing');
-    });
-    fresh.addEventListener('touchmove', () => {
-      clearTimeout(pressTimer);
-      fresh.classList.remove('pressing');
-    });
+      }, 650);
+    }, { passive: true });
 
-    // LONG PRESS desktop
-    fresh.addEventListener('contextmenu', e => { e.preventDefault(); stkLong(id); });
+    fresh.addEventListener('touchend', () => {
+      clearTimeout(_pressTimer);
+      fresh.classList.remove('pressing');
+    }, { passive: true });
+
+    fresh.addEventListener('touchmove', () => {
+      clearTimeout(_pressTimer);
+      fresh.classList.remove('pressing');
+    }, { passive: true });
+
+    // Desktop — clic derecho
+    fresh.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      _isLongPress = true;
+      stkLong(id);
+    });
   });
 }
 
 // ── TOQUE LÁMINA ──
 async function stkTap(id) {
-  const s = ST[id] || {id, got:false, rep:0};
+  // Crear entrada si no existe
+  if (!ST[id]) ST[id] = {id, got:false, rep:0};
+  const s = ST[id];
   if (!s.got) {
     s.got = true; s.rep = 0;
   } else {
     s.rep = (s.rep || 0) + 1;
   }
-  await dbPut('stk', s); ST[id] = s;
+  ST[id] = s;
+  await dbPut('stk', s);
   beep();
   updateStkVisual(id);
   refreshStats();
-  const msg = s.rep > 0 ? '🔄 ' + id + ' repetida ×' + (s.rep+1) : '✅ ' + id + ' agregada';
+  const msg = s.rep > 0
+    ? '🔄 ' + id + ' repetida ×' + (s.rep + 1)
+    : '✅ ' + id + ' agregada';
   toast(msg);
 }
 
 async function stkLong(id) {
+  if (!ST[id] || !ST[id].got) { toast('⚠️ ' + id + ' no está registrada'); return; }
   const s = ST[id];
-  if (!s || !s.got) { toast('⚠️ Lámina no registrada'); return; }
   if (s.rep > 0) {
     s.rep--;
-    await dbPut('stk', s); ST[id] = s;
     toast('➖ ' + id + ' repetida −1');
   } else {
     s.got = false; s.rep = 0;
-    await dbPut('stk', s); ST[id] = s;
     toast('🗑 ' + id + ' eliminada');
   }
+  ST[id] = s;
+  await dbPut('stk', s);
   updateStkVisual(id);
   refreshStats();
 }
@@ -1288,6 +1308,17 @@ async function boot() {
 }
 
 boot();
+
+// ── INICIALIZAR AUDIO en primer gesto (iOS requiere esto) ──
+document.addEventListener('touchstart', function initAudio() {
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (AC && !_ac) {
+    _ac = new AC();
+  } else if (_ac && _ac.state === 'suspended') {
+    _ac.resume();
+  }
+  document.removeEventListener('touchstart', initAudio);
+}, { passive: true });
 
 // ── SERVICE WORKER (offline) ──
 if ('serviceWorker' in navigator) {
